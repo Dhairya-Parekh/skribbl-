@@ -12,6 +12,16 @@ function Game({user,socket,settings}){
     const [currentword,setcurrentword] = useState("Kaddu");
     const [popup,setpopup] = useState(true);
     const [current_drawer,setcurrent_drawer] = useState(null);
+    const [round_ender,setround_ender] = useState(false);
+
+
+/*    //---------------------------------------------------------//
+    useEffect(() =>{
+        if(settings.nor < current_drawer.round_count){
+            setround_ender(true);
+        }
+    },[current_drawer]);*/
+    //---------------------------------------------------------//
     function generate_random_word(){
         return worddict.english[parseInt(Math.random()*worddict.english.length)];
     }
@@ -48,13 +58,20 @@ function Game({user,socket,settings}){
         }    
     }    
     //-----------------------------------------------------------//
+    console.log("return mein kya aaya ",user);
     return(  
         <div>
             {
                 current_drawer!==null?
                 <div>
                     <div className='Game'>
-                        <div>
+                      {round_ender ? 
+                      <div>
+                          <Scores/>
+                      </div>
+                      :
+                      <div>
+                          <div>
                             <Timer
                                 user={user}
                                 socket={socket}
@@ -105,7 +122,7 @@ function Game({user,socket,settings}){
                                 socket={socket}
                                 currentword={currentword}
                             /> 
-                        </div>
+                        </div></div>}  
                     </div>
                 </div>
                 :
@@ -122,3 +139,4 @@ function Game({user,socket,settings}){
 export default Game;
 
 
+/* */

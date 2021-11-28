@@ -26,7 +26,7 @@ io.on("connection", (socket) => {
   //for a new user joining the room
   socket.on("joinRoom_Old", ({ username, roomname}) => {
     //* create user
-    const p_user = join_User(socket.id, username, roomname, false);
+    const p_user = join_User(socket.id, username, roomname, false, 0);
     console.log(socket.id, "=id");
     socket.join(p_user.room);
     //display a welcome message to the user who have joined a room
@@ -48,7 +48,7 @@ io.on("connection", (socket) => {
 
   socket.on("joinRoom_New", ({ username, roomname}) => {
     //* create user
-    const p_user = join_User(socket.id, username, roomname, true);
+    const p_user = join_User(socket.id, username, roomname, true, 1);
     console.log(socket.id, "=id");
     socket.join(p_user.room);
     //display a welcome message to the user who have joined a room

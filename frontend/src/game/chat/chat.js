@@ -6,6 +6,7 @@ function Chat({ user,drawer,socket,currentword }) {
   const [messages, setMessages] = useState([]);
   const [can_chat, setcan_chat] = useState(true);
   const [time,settime] = useState(0);
+  console.log("---XXXX----chatcall",user);
   useEffect(() => {
     socket.on("message", (data) => {
 
@@ -35,7 +36,7 @@ useEffect(() =>{
       if(currentword === text){
         socket.emit("chat",`${user.username} guessed correctly!!!`);
         setcan_chat(false);
-  //      console.log("----------------------",time,"----------------------");
+        console.log("--------mai jo bhej raha--------",user,"----------------------");
         socket.emit("updateScore",user,250);
         
       }
