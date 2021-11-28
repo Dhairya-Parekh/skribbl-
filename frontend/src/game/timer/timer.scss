@@ -1,0 +1,29 @@
+.timer {
+    align-items: center;
+    min-height: 50px;
+    padding: 1rem;
+    width: 150px;
+    flex-direction: column;
+    display: flex;
+    margin-left: 7rem;
+    margin-top: -31rem ;  
+    justify-content: space-evenly;
+    background-color: #ffffff ;
+    
+    h1 {
+      padding: auto;
+      color:rgb(23, 237, 245);
+      font-weight: 700;
+      text-align: left;
+      left: 20px;
+    }
+    
+    p {  
+      font-size: 1rem;
+      padding: 1.2rem;
+      margin-top: 0.5rem;
+      border-radius: 5px;
+      background-color: rgba(0, 0, 0, 0.4);
+      text-overflow: auto;
+    }
+  }

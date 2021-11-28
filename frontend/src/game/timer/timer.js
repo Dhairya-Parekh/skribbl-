@@ -115,10 +115,10 @@ const Timer = ({timelimit,socket,user,drawer}) => {
   }, [isActive,seconds, timelimit]);
 
   return(
-      <div>
-        <div>
+      <div className="timer">
+        <h1>
           {timelimit - seconds}s
-        </div>
+        </h1>
       </div>
     );
   };
