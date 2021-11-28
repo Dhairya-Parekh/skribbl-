@@ -1,7 +1,7 @@
 const c_users = [];
 
 // joins the user to the specific chatroom
-function join_User(id, username, room, is_active) {
+function join_User(id, username, room, is_active, round_count) {
   var scores = 0
   var score = 0
   const p_user = { id, username, room, is_active, scores, score};
@@ -42,6 +42,7 @@ function update_active_user(room) {
   var next_user_id = new_arr[(ind+1)%new_arr.length].id;
   c_users.find((p_user) => p_user.id === current_id).is_active = false;
   c_users.find((p_user) => p_user.id === next_user_id).is_active = true;
+  c_users.find((p_user) => p_user.id === next_user_id).round_count += 1;
   return  c_users.find((p_user) => p_user.id === next_user_id);
 }
 //--------------------------------------------------------------------//
@@ -51,6 +52,7 @@ function update_score(user,dscore){
   console.log("ALso the cusers array is",c_users)
   c_users.find((p_user) => p_user.id === user.id).score = dscore; 
   c_users.find((p_user) => p_user.id === user.id).scores += dscore;
+
   var new_arr = c_users.filter((p_user) => p_user.room === user.room && !p_user.is_active );
   var is_end = true;
   var score_drawer = 0;
@@ -63,7 +65,8 @@ function update_score(user,dscore){
   }
   score_drawer/=new_arr.length;
   if(is_end){
-    console.log("------sub round over ---------");
+    console.log("---- aasaan woord aaya  ---------");
+    console.log("----new array",new_arr);
     for(var i=0;i<new_arr.length;i++){
       c_users.find((p_user) => p_user.id === new_arr[i].id).score = 0;
   }
