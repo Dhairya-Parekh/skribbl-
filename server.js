@@ -23,7 +23,7 @@ const io = socket(server);
 
 //initializing the socket io connection 
 io.on("connection", (socket) => {
-  //for a new user joining the room
+  
   socket.on("joinRoom_Old", ({ username, roomname}) => {
     //* create user
     const p_user = join_User(socket.id, username, roomname, false, 0);
@@ -68,7 +68,6 @@ io.on("connection", (socket) => {
     //socket.emit("updateusers");
   });
 
-  //user sending message
   socket.on("chat", (text) => {
     //gets the room user and the message sent
     const p_user = get_Current_User(socket.id);
@@ -79,11 +78,9 @@ io.on("connection", (socket) => {
     });
   });
 
-  //when the user exits the room
   socket.on("disconnect", () => {
     //the user is deleted from array of users and a left room message displayed
     const p_user = user_Disconnect(socket.id);
-    console.log("*********8",p_user)
     if (p_user) {
       io.to(p_user.room).emit("message", {
         userId: p_user.id,
@@ -120,76 +117,90 @@ io.on("connection", (socket) => {
     });
   });
 
-  //------------------------------------------------------//
-  socket.on("update_active_user",(room) => {
-    const user = update_active_user(room);
-    console.log(user);
-    io.to(room).emit("active_user_updated",{user:user});
-  })
-  //------------------------------------------------------//
-  //-----------------------------------------------------//
-  socket.on("updateScore",(user,dscore) => {
-    console.log("Huiuiuiuiui User me received ",user)
-    const is_end = update_score(user,dscore);
-    const curr_draw = get_Active_User(user.room);
-    if(is_end){
-      io.to(user.room).emit("Sub_Round_Over",{curr_draw:curr_draw});
-    }
-  })
-  //-----------------------------------------------------//
-  //-----------------------------------------------------//
   socket.on("start_timer",(room)=>{
     io.to(room).emit("Timer_On");
   })
-  //-----------------------------------------------------//
-  //----------------------------------------------------//
+
   socket.on("time_over",(room)=>{
+    console.log("Received the time over in room",room)
     update_drawer_score(room);
     const curr_draw = update_active_user(room);
     io.to(room).emit("Sub_Round_khatam",{curr_draw:curr_draw});
+    console.log("Sub Round Finally khatam ")
   })
-  // socket.on("time_over",(room)=>{
-  //   const curr_draw = get_Active_User(room);
-  //   update_drawer(room);
-  //   io.to(room).emit("Sub_Round_Over",{curr_draw:curr_draw});
-  // })
-  //----------------------------------------------------//
-  //----------------------------------------------------//
-  socket.on("reset_timer",(room)=>{
-    io.to(room).emit("Reset_Timer");
-  })
-  //----------------------------------------------------//
-  //---------------------------------------------------//
-  socket.on("update_chatting_rights",(room)=>{
-    io.to(room).emit("u_c_r");
-  })
-  //---------------------------------------------------//
-  //---------------------------------------------------//
-  /*socket.on("time_now",(data)=>{
-    console.log("***********recieved time at server*********",data.time);
-    io.to(data.room).emit("Time_Now",{time:data.time});
-  })*/
-  //----------------------------------------------------//
+
   socket.on("Start_Game_For_All",()=>{
     const p_user = get_Current_User(socket.id);
     io.to(p_user.room).emit("Start_Game");
   })
+
   socket.on("word_has_changed",(s)=>{
     const p_user = get_Current_User(socket.id);
     io.to(p_user.room).emit("Received_new_word", {
       word: s,
     });
   })
+
   socket.on("Gussed_Correctly",()=>{
+    console.log("Guss correct event is catched");
     socket.emit("get_current_time")
   })
+
   socket.on("Receive_current_time",(data)=>{
+    console.log("Yup Here I am with current time:",data)
     var is_end = update_score(socket.id,data)
+    console.log("Yup Here I am with current isEnd:",is_end)
     if(is_end){
       const p_user = get_Current_User(socket.id);
       socket.emit("time_over",p_user.room);
+      console.log("Yes the time is up")
     }
   })
+
+  //------------------------------------------------------//
+  socket.on("update_active_user",(room) => {
+    const user = update_active_user(room);
+    console.log(user);
+    io.to(room).emit("active_user_updated",{user:user});
+  })
+
+  // //------------------------------------------------------//
+  // //-----------------------------------------------------//
+  // socket.on("updateScore",(user,dscore) => {
+  //   console.log("Huiuiuiuiui User me received ",user)
+  //   const is_end = update_score(user,dscore);
+  //   const curr_draw = get_Active_User(user.room);
+  //   if(is_end){
+  //     io.to(user.room).emit("Sub_Round_Over",{curr_draw:curr_draw});
+  //   }
+  // })
+  // //-----------------------------------------------------//
+  // //-----------------------------------------------------//
+  // //-----------------------------------------------------//
+  // //----------------------------------------------------//
+
+  // // socket.on("time_over",(room)=>{
+  // //   const curr_draw = get_Active_User(room);
+  // //   update_drawer(room);
+  // //   io.to(room).emit("Sub_Round_Over",{curr_draw:curr_draw});
+  // // })
+  // //----------------------------------------------------//
+  // //----------------------------------------------------//
+  // socket.on("reset_timer",(room)=>{
+  //   io.to(room).emit("Reset_Timer");
+  // })
+  // //----------------------------------------------------//
+  // //---------------------------------------------------//
+  // socket.on("update_chatting_rights",(room)=>{
+  //   io.to(room).emit("u_c_r");
+  // })
+  // //---------------------------------------------------//
+  // //---------------------------------------------------//
+  // /*socket.on("time_now",(data)=>{
+  //   console.log("***********recieved time at server*********",data.time);
+  //   io.to(data.room).emit("Time_Now",{time:data.time});
+  // })*/
+  // //----------------------------------------------------//
 });
 
 const path = require('path');

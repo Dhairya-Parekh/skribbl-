@@ -16,7 +16,7 @@ function Appmain({settings}) {
       setUser(data.current_user)
     });
   },[]);
-  console.log("----------",user,"-------------")
+  console.log("----------",user,settings,"-------------")
   
   return (
     <React.Fragment>

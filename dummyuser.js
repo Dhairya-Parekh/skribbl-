@@ -27,10 +27,7 @@ function get_all_users(room) {
   return c_users.filter((p_user) => p_user.room === room);
 }
 
-// Get active user
 function get_Active_User(room) {
-  console.log("received the room: ",room);
-  console.log("Inside get_active_user: ",c_users.find((p_user) => p_user.is_active === true && p_user.room === room));
   return c_users.find((p_user) => p_user.is_active === true && p_user.room === room);
 }
 
@@ -44,6 +41,35 @@ function update_active_user(room) {
   c_users.find((p_user) => p_user.id === next_user_id).is_active = true;
   c_users.find((p_user) => p_user.id === next_user_id).round_count += 1;
   return  c_users.find((p_user) => p_user.id === next_user_id);
+}
+
+function update_score(id,time){
+  console.log("Lmao Lmao received", id, time)
+  c_users.find((p_user) => p_user.id === id).score = 250 - 3*time;
+  c_users.find((p_user) => p_user.id === id).scores += 250 - 3*time;
+  const user = c_users.find((p_user) => p_user.id === id)
+  var new_arr = c_users.filter((p_user) => p_user.room === user.room && !user.is_active );
+  console.log("The full array is", c_users)
+  console.log("The New_Arr is",new_arr)
+  var is_end = true;
+  for(var i=0;i<new_arr.length;i++){
+    if(new_arr[i].score === 0){
+      is_end = false;
+      break;
+    }
+  }
+  return is_end;
+}
+
+function update_drawer_score(room){
+  var new_arr = c_users.filter((p_user) => p_user.room === room && !p_user.is_active );
+  var score_drawer = 0;
+  for(var i=0;i<new_arr.length;i++){
+    score_drawer+=new_arr[i].score;
+    c_users.find((p_user) => p_user.id === new_arr[i].id).score = 0;
+  }
+  score_drawer/=new_arr.length;
+  c_users.find((p_user) => p_user.is_active && p_user.room === room).scores+=score_drawer;
 }
 //--------------------------------------------------------------------//
 //-------------------------------------------------------------------//
@@ -76,33 +102,9 @@ function update_active_user(room) {
 // }
 
 //-------------------------------------------------------------------//
-function update_score(id,time){
-  c_users.find((p_user) => p_user.id === id).score = 250 - 3*time;
-  c_users.find((p_user) => p_user.id === id).scores += 250 - 3*time;
-  const user = c_users.find((p_user) => p_user.id === id)
-  var new_arr = c_users.filter((p_user) => p_user.room === user.room && !user.is_active );
-  var is_end = true;
-  var score_drawer = 0;
-  for(var i=0;i<new_arr.length;i++){
-    score_drawer+=new_arr[i].score;
-    if(new_arr[i].score === 0){
-      is_end = false;
-      break;
-    }
-  }
-  return is_end;
-}
+
 //-------------------------------------------------------------------//
-function update_drawer_score(room){
-  var new_arr = c_users.filter((p_user) => p_user.room === room && !p_user.is_active );
-  var score_drawer = 0;
-  for(var i=0;i<new_arr.length;i++){
-    score_drawer+=new_arr[i].score;
-    c_users.find((p_user) => p_user.id === new_arr[i].id).score = 0;
-  }
-  score_drawer/=new_arr.length;
-  c_users.find((p_user) => p_user.is_active && p_user.room === room).scores+=score_drawer;
-}
+
 //-------------------------------------------------------------------//
 module.exports = {
   join_User,

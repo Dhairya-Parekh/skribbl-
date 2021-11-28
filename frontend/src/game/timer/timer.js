@@ -22,13 +22,15 @@ const Timer = ({timelimit,socket,user,drawer}) => {
       reset()
     }
     return () => clearInterval(interval);
-  }, [isActive,seconds, timelimit]);
+  }, [isActive,seconds, timelimit, drawer, socket, user]);
   
   socket.on("Timer_On",()=>{
     setIsActive(true);
   })
   socket.on("get_current_time",()=>{
+    console.log("Get_current_time event is called")
     socket.emit("Receive_current_time",seconds)
+    console.log("Sent the following data", seconds)
   })
   return(
       <div>

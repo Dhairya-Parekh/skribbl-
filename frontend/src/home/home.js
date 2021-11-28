@@ -104,7 +104,7 @@ function Homepage({ socket }) {
       : null}
       {roomisshown ? <Roomdetails /> : null}
       {globallobby ? <Globalredirect /> : null}
-  </div>
+    </div>
   );
 }
 

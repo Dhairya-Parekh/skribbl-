@@ -22,7 +22,7 @@ function Userlist({ socket, roomname}) {
           })}
       </div>
     );
-  }
+}
 
 
 function Lobby({user,socket}){

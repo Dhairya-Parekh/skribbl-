@@ -6,6 +6,7 @@ function Chat({ user,drawer,socket,currentword }) {
   const [messages, setMessages] = useState([]);
   const [can_chat, setcan_chat] = useState(true);
   const messagesEndRef = useRef(null);
+  
   useEffect(() => {
     socket.on("message", (data) => {
       let temp = messages;
@@ -21,12 +22,14 @@ function Chat({ user,drawer,socket,currentword }) {
     messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
   };
   useEffect(scrollToBottom, [messages]);
+  
   const sendData = () => {
     if (text !== "" && user.id !== drawer.id && can_chat) {
       if(currentword === text){
         socket.emit("chat",`${user.username} guessed correctly!!!`);
         setcan_chat(false);
         socket.emit("Gussed_Correctly")
+        console.log("Guessed_Curretly event is thrown");
       }
       else{
         socket.emit("chat",text);
