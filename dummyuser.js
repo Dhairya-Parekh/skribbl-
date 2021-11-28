@@ -10,6 +10,11 @@ function join_User(id, username, room, is_active, round_count) {
   return p_user;
 }
 
+function isroomempty(room){
+  var new_arr = c_users.filter((p_user) => p_user.room === room);
+  return (new_arr.length === 0);
+}
+
 // Gets a particular user id to return the current user
 function get_Current_User(id) {
   return c_users.find((p_user) => p_user.id === id);
@@ -71,6 +76,20 @@ function update_drawer_score(room){
   score_drawer/=new_arr.length;
   c_users.find((p_user) => p_user.is_active && p_user.room === room).scores+=score_drawer;
 }
+
+function isgameover(nor,id){
+  const p_user = c_users.find((x) => x.id === id);
+
+  var new_arr = c_users.filter((x) => x.room === p_user.room);
+  var isgameover = false;
+  for(var i=0;i<new_arr.length;i++){
+    if(new_arr[i].round_count > nor){
+      isgameover = true;
+      break;
+    }
+  }
+  return isgameover;
+}
 //--------------------------------------------------------------------//
 //-------------------------------------------------------------------//
 // function update_score(user,dscore){
@@ -114,5 +133,7 @@ module.exports = {
   get_Active_User,
   update_active_user,
   update_score,
-  update_drawer_score
+  update_drawer_score,
+  isroomempty,
+  isgameover
 };

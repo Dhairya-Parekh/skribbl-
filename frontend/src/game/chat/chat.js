@@ -1,5 +1,6 @@
 import "./chat.scss";
 import React, { useState, useEffect, useRef } from "react";
+var stringSimilarity = require("string-similarity");
 
 function Chat({ user,drawer,socket,currentword }) {
   const [text, setText] = useState("");
@@ -32,6 +33,12 @@ function Chat({ user,drawer,socket,currentword }) {
         console.log("Guessed_Curretly event is thrown");
       }
       else{
+        if(stringSimilarity.compareTwoStrings(text,currentword) > 0.5){
+          socket.emit("chat",`${user.username} is very close!!!`);
+        }
+        else{
+          socket.emit("chat",text);
+        }
         socket.emit("chat",text);
       }
       setText("");

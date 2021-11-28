@@ -7,11 +7,13 @@ function Scores({ socket, roomname, drawer }) {
   },[socket, roomname])
   socket.on("userList",(data)=>{
     setUserList(data.users)
+
   })
   return(
     <div className="scores">
       <h1>Scores</h1>
       {userlist.map((i) => {
+        console.log("*********************",i,"*********************************");
           return(
             <div>
               <p>

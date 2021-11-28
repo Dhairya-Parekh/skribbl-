@@ -1,6 +1,6 @@
 import React,{useState, useEffect} from 'react';
 import { Redirect } from "react-router-dom";
-
+import './lobby.scss';
 
 function Userlist({ socket, roomname}) {
     const [userlist, setUserList] = useState([]);
@@ -11,7 +11,7 @@ function Userlist({ socket, roomname}) {
       setUserList(data.users)
     })
     return(
-      <div>
+      <div className="PlayerList">
         <h1>Players</h1>
         {userlist.map((i) => {
             return(
@@ -60,30 +60,36 @@ function Lobby({user,socket}){
                 </div>
                 {
                     user.is_active?
-                    <div>
+                    <div className="settings">
                         <div>
                             <h3>
-                                Rounds ka slider
+                                Rounds
                             </h3>
+                            <div>
                             <input
                                 defaultValue="3"
                                 type="range"
                                 min="2"
                                 max="6"
                                 onChange={Change_Rounds}
+                                className="slider"
                             />
+                           </div>
                         </div>
                         <div>
                             <h3>
-                                Time ka slider
+                                Time
                             </h3>
-                            <input
+                            <div>
+                            <input 
                                 defaultValue="20"
                                 type="range"
                                 min="10"
                                 max="80"
                                 onChange={Change_Time}
+                                className="slider"
                             />
+                            </div>
                         </div>
                         <button onClick={Start_The_Game}>Enter Room</button>
                     </div>

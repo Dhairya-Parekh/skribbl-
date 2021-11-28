@@ -8,12 +8,11 @@ function Homepage({ socket }) {
   const [modalisshown, setmodalstate] = useState("");
   const [globallobby, setgloballobby] = useState("");
   const [roomisshown, setroomstate] = useState("");
-  var should_be_active_user = false;
+
   //activates joinRoom function defined on the backend
   const sendData = () => {
     if (username !== "" && roomname !== "") {
-      if(should_be_active_user) socket.emit("joinRoom_New", { username, roomname });
-      else socket.emit("joinRoom_Old", { username, roomname });
+      socket.emit("joinRoom", { username, roomname });
       //if empty error message pops up and returns to the same page
     } else {
       alert("username and roomname are must !");
@@ -44,7 +43,6 @@ function Homepage({ socket }) {
           <center>
             <Link to={`/game/${roomname}/lobby`}>
               <button className="button" onClick={()=>{
-                should_be_active_user = true;
                 sendData();
                 }}>Join Room</button>
             </Link>
@@ -65,7 +63,6 @@ function Homepage({ socket }) {
           <center>
             <Link to={`/game/${roomname}/${username}`}>
               <button className="button" onClick={()=>{
-                should_be_active_user = true;
                 sendData();
                 }}>Start Game</button>
             </Link>

@@ -1,8 +1,8 @@
-import React,{ useState } from 'react';
+import React,{ useState,useEffect } from 'react';
 const worddict = require('./words.json');
 
-function Words({user, socket ,drawer,update_curr_word,show_popup}){    
-    const [popup,setpopup] = useState(show_popup);
+function Words({user, socket ,drawer,update_curr_word}){    
+    const [popup,setpopup] = useState(true);
     function generate_random_word(){
         return worddict.english[parseInt(Math.random()*worddict.english.length)];
     }
@@ -17,7 +17,12 @@ function Words({user, socket ,drawer,update_curr_word,show_popup}){
     socket.on("Received_new_word",(data)=>{
         set_random_word(data.word);
     })
-    console.log("words is re-rendered",popup)
+    useEffect(()=>{
+        if(user.id===drawer.id){
+            setpopup(true)
+        }
+    },[user,drawer])
+
     return(
     <div>
         {popup && user.id === drawer.id?

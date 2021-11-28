@@ -3,7 +3,7 @@ const app = express();
 const socket = require("socket.io");
 const color = require("colors");
 const cors = require("cors");
-const { get_Current_User, user_Disconnect, join_User, get_all_users, get_Active_User, update_active_user, update_score, update_drawer_score } = require("./dummyuser");
+const { get_Current_User, user_Disconnect, join_User, get_all_users, get_Active_User, update_active_user, update_score, update_drawer_score, isroomempty, isgameover} = require("./dummyuser");
 
 app.use(express());
 
@@ -24,49 +24,32 @@ const io = socket(server);
 //initializing the socket io connection 
 io.on("connection", (socket) => {
   
-  socket.on("joinRoom_Old", ({ username, roomname}) => {
-    //* create user
-    const p_user = join_User(socket.id, username, roomname, false, 0);
-    console.log(socket.id, "=id");
+  socket.on("joinRoom", ({ username, roomname }) => {
+    var p_user=null;
+    if(isroomempty(roomname)){
+      p_user = join_User(socket.id, username, roomname, true, 1);}
+    else{
+     p_user = join_User(socket.id, username, roomname, false, 0);}
+      
     socket.join(p_user.room);
-    //display a welcome message to the user who have joined a room
     socket.emit("message", {
       userId: p_user.id,
       username: p_user.username,
       text: `Welcome ${p_user.username}`,
     });
-
+  
     //displays a joined room message to all other room users except that particular user
     socket.broadcast.to(p_user.room).emit("message", {
       userId: p_user.id,
       username: p_user.username,
       text: `${p_user.username} has joined the chat`,
-    });
-
-    //socket.emit("updateusers");
+        });
+  
+      //socket.emit("updateusers");
   });
+  
 
-  socket.on("joinRoom_New", ({ username, roomname}) => {
-    //* create user
-    const p_user = join_User(socket.id, username, roomname, true, 1);
-    console.log(socket.id, "=id");
-    socket.join(p_user.room);
-    //display a welcome message to the user who have joined a room
-    socket.emit("message", {
-      userId: p_user.id,
-      username: p_user.username,
-      text: `Welcome ${p_user.username}`,
-    });
-
-    //displays a joined room message to all other room users except that particular user
-    socket.broadcast.to(p_user.room).emit("message", {
-      userId: p_user.id,
-      username: p_user.username,
-      text: `${p_user.username} has joined the chat`,
-    });
-
-    //socket.emit("updateusers");
-  });
+  
 
   socket.on("chat", (text) => {
     //gets the room user and the message sent
@@ -122,7 +105,8 @@ io.on("connection", (socket) => {
   })
 
   socket.on("time_over",(room)=>{
-    console.log("Received the time over in room",room)
+    console.log("Received the time over in room",room);
+    io.to(room).emit("Stop_Timer");
     update_drawer_score(room);
     const curr_draw = update_active_user(room);
     io.to(room).emit("Sub_Round_Khatam",{curr_draw:curr_draw});
@@ -133,7 +117,15 @@ io.on("connection", (socket) => {
     const p_user = get_Current_User(socket.id);
     io.to(p_user.room).emit("Start_Game");
   })
+  socket.on("isgameover",(data) => {
+    var x = isgameover(data,socket.id);
+    const p_user = get_Current_User(socket.id);
+    if(x){
+      io.to(p_user.room).emit("GameOver");
+    }
 
+  })
+  
   socket.on("word_has_changed",(s)=>{
     const p_user = get_Current_User(socket.id);
     io.to(p_user.room).emit("Received_new_word", {
@@ -142,13 +134,15 @@ io.on("connection", (socket) => {
   })
 
   socket.on("Gussed_Correctly",()=>{
+    const p_user = get_Current_User(socket.id);
     console.log("Guss correct event is catched");
+    io.to(p_user.room).emit("Stop_Timer");
     //socket.emit("get_current_time")
     console.log("Yup Here I am with current time:",30)
     var is_end = update_score(socket.id,30)
     console.log("Yup Here I am with current isEnd:",is_end)
     if(is_end){
-      const p_user = get_Current_User(socket.id);
+
       console.log("Is_end_ke andar hu",p_user.room)
       update_drawer_score(p_user.room);
       const curr_draw = update_active_user(p_user.room);

@@ -1,8 +1,9 @@
 .homepage {
-  width: 500px;
-  height: 500px;
+  width: 400px;
+  height: 400px;
   padding: 2rem;
-  background-color: #2d343e;
+  background-color: #1d2025;
+  opacity: 0.9;
   display: flex;
   justify-content: space-evenly;
   flex-direction: column;
@@ -13,6 +14,7 @@
     background-color: #404450;
     border: none;
     padding-left: 1rem;
+    opacity:1;
     border-radius: 5px;
     &:focus {
       outline: none;
