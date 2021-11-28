@@ -71,7 +71,7 @@ function Game({user,socket,settings}){
                       </div>
                       :
                       <div>
-                          <div>
+                          <div className="timer">
                             <Timer
                                 user={user}
                                 socket={socket}
@@ -97,9 +97,7 @@ function Game({user,socket,settings}){
                                     :null
                                 }
                             </div>
-                            <div>
-                                <button onClick={()=>sub_round_over()}>Next Round</button>
-                            </div>
+
                             <div>
                                 <Words
                                     user={user}
