@@ -96,7 +96,6 @@ io.on("connection", (socket) => {
 
   socket.on("updateusers", (room) => {
     const p_user_arr = get_all_users(room.roomname);
-    console.log("Yes i have the user array",p_user_arr)
     io.to(p_user_arr[0].room).emit("userList",{users: p_user_arr});
   });
 
@@ -130,6 +129,7 @@ io.on("connection", (socket) => {
   //------------------------------------------------------//
   //-----------------------------------------------------//
   socket.on("updateScore",(user,dscore) => {
+    console.log("Huiuiuiuiui User me received ",user)
     const is_end = update_score(user,dscore);
     const curr_draw = get_Active_User(user.room);
     if(is_end){

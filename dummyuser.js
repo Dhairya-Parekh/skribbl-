@@ -47,6 +47,8 @@ function update_active_user(room) {
 //--------------------------------------------------------------------//
 //-------------------------------------------------------------------//
 function update_score(user,dscore){
+  console.log("Hemlo, User I received************",user)
+  console.log("ALso the cusers array is",c_users)
   c_users.find((p_user) => p_user.id === user.id).score = dscore; 
   c_users.find((p_user) => p_user.id === user.id).scores += dscore;
   var new_arr = c_users.filter((p_user) => p_user.room === user.room && !p_user.is_active );
