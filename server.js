@@ -3,7 +3,7 @@ const app = express();
 const socket = require("socket.io");
 const color = require("colors");
 const cors = require("cors");
-const { get_Current_User, user_Disconnect, join_User, get_all_users, get_Active_User, update_active_user, update_score, update_drawer } = require("./dummyuser");
+const { get_Current_User, user_Disconnect, join_User, get_all_users, get_Active_User, update_active_user, update_score, update_drawer_score } = require("./dummyuser");
 
 app.use(express());
 
@@ -139,15 +139,20 @@ io.on("connection", (socket) => {
   //-----------------------------------------------------//
   //-----------------------------------------------------//
   socket.on("start_timer",(room)=>{
-    io.to(room).emit("Start_Timer");
+    io.to(room).emit("Timer_On");
   })
   //-----------------------------------------------------//
   //----------------------------------------------------//
   socket.on("time_over",(room)=>{
-    const curr_draw = get_Active_User(room);
-    update_drawer(room);
-    io.to(room).emit("Sub_Round_Over",{curr_draw:curr_draw});
+    update_drawer_score(room);
+    const curr_draw = update_active_user(room);
+    io.to(room).emit("Sub_Round_khatam",{curr_draw:curr_draw});
   })
+  // socket.on("time_over",(room)=>{
+  //   const curr_draw = get_Active_User(room);
+  //   update_drawer(room);
+  //   io.to(room).emit("Sub_Round_Over",{curr_draw:curr_draw});
+  // })
   //----------------------------------------------------//
   //----------------------------------------------------//
   socket.on("reset_timer",(room)=>{
@@ -169,7 +174,22 @@ io.on("connection", (socket) => {
     const p_user = get_Current_User(socket.id);
     io.to(p_user.room).emit("Start_Game");
   })
-  
+  socket.on("word_has_changed",(s)=>{
+    const p_user = get_Current_User(socket.id);
+    io.to(p_user.room).emit("Received_new_word", {
+      word: s,
+    });
+  })
+  socket.on("Gussed_Correctly",()=>{
+    socket.emit("get_current_time")
+  })
+  socket.on("Receive_current_time",(data)=>{
+    var is_end = update_score(socket.id,data)
+    if(is_end){
+      const p_user = get_Current_User(socket.id);
+      socket.emit("time_over",p_user.room);
+    }
+  })
 });
 
 const path = require('path');

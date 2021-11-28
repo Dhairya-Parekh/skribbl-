@@ -14,13 +14,15 @@ function Scores({ socket, roomname, drawer }) {
       {userlist.map((i) => {
           return(
             <div>
-              {i.id===drawer.id?
-              <h2>**</h2>
-              :
-              null
-              }
-              <h2>{i.username}</h2>
-              <h3>{Number(i.score)}</h3>
+              <p>
+                {i.id===drawer.id?
+                <h2>**</h2>
+                :
+                null
+                }
+                <h2>{i.username}</h2>
+              </p>
+              <h3>{Number(i.scores)}</h3>
             </div>
           );
         })}

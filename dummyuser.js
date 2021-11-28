@@ -47,13 +47,40 @@ function update_active_user(room) {
 }
 //--------------------------------------------------------------------//
 //-------------------------------------------------------------------//
-function update_score(user,dscore){
-  console.log("Hemlo, User I received************",user)
-  console.log("ALso the cusers array is",c_users)
-  c_users.find((p_user) => p_user.id === user.id).score = dscore; 
-  c_users.find((p_user) => p_user.id === user.id).scores += dscore;
+// function update_score(user,dscore){
+//   console.log("Hemlo, User I received************",user)
+//   console.log("ALso the cusers array is",c_users)
+//   c_users.find((p_user) => p_user.id === user.id).score = dscore; 
+//   c_users.find((p_user) => p_user.id === user.id).scores += dscore;
 
-  var new_arr = c_users.filter((p_user) => p_user.room === user.room && !p_user.is_active );
+//   var new_arr = c_users.filter((p_user) => p_user.room === user.room && !p_user.is_active );
+//   var is_end = true;
+//   var score_drawer = 0;
+//   for(var i=0;i<new_arr.length;i++){
+//     score_drawer+=new_arr[i].score;
+//     if(new_arr[i].score === 0){
+//       is_end = false;
+//       break;
+//     }
+//   }
+//   score_drawer/=new_arr.length;
+//   if(is_end){
+//     console.log("---- aasaan woord aaya  ---------");
+//     console.log("----new array",new_arr);
+//     for(var i=0;i<new_arr.length;i++){
+//       c_users.find((p_user) => p_user.id === new_arr[i].id).score = 0;
+//   }
+//   c_users.find((p_user) => p_user.is_active && p_user.room === user.room).scores+=score_drawer;
+// }
+// return is_end;
+// }
+
+//-------------------------------------------------------------------//
+function update_score(id,time){
+  c_users.find((p_user) => p_user.id === id).score = 250 - 3*time;
+  c_users.find((p_user) => p_user.id === id).scores += 250 - 3*time;
+  const user = c_users.find((p_user) => p_user.id === id)
+  var new_arr = c_users.filter((p_user) => p_user.room === user.room && !user.is_active );
   var is_end = true;
   var score_drawer = 0;
   for(var i=0;i<new_arr.length;i++){
@@ -63,26 +90,19 @@ function update_score(user,dscore){
       break;
     }
   }
-  score_drawer/=new_arr.length;
-  if(is_end){
-    console.log("---- aasaan woord aaya  ---------");
-    console.log("----new array",new_arr);
-    for(var i=0;i<new_arr.length;i++){
-      c_users.find((p_user) => p_user.id === new_arr[i].id).score = 0;
-  }
-  c_users.find((p_user) => p_user.is_active && p_user.room === user.room).scores+=score_drawer;
-}
-return is_end;
+  return is_end;
 }
 //-------------------------------------------------------------------//
-function update_drawer(room){
+function update_drawer_score(room){
   var new_arr = c_users.filter((p_user) => p_user.room === room && !p_user.is_active );
   var score_drawer = 0;
   for(var i=0;i<new_arr.length;i++){
     score_drawer+=new_arr[i].score;
-}
+    c_users.find((p_user) => p_user.id === new_arr[i].id).score = 0;
+  }
   score_drawer/=new_arr.length;
-  c_users.find((p_user) => p_user.is_active && p_user.room === room).scores+=score_drawer;}
+  c_users.find((p_user) => p_user.is_active && p_user.room === room).scores+=score_drawer;
+}
 //-------------------------------------------------------------------//
 module.exports = {
   join_User,
@@ -92,5 +112,5 @@ module.exports = {
   get_Active_User,
   update_active_user,
   update_score,
-  update_drawer
+  update_drawer_score
 };

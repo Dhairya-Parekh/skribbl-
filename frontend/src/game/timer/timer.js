@@ -4,10 +4,53 @@ import React, { useState, useEffect } from "react";
 const Timer = ({timelimit,socket,user,drawer}) => {
   const [seconds, setSeconds] = useState(0);
   const [isActive, setIsActive] = useState(false);
+  function reset() {
+    setSeconds(0);
+    setIsActive(false);
+  }
+  useEffect(() => {
+    let interval = null;
+    if(seconds<timelimit && isActive){
+      interval = setInterval(() => {
+        setSeconds(seconds => seconds + 1);
+      }, 1000);
+    }
+    else if(seconds>=timelimit && isActive){
+      if(user.id===drawer.id){
+        socket.emit("time_over",user.room);
+      }
+      reset()
+    }
+    return () => clearInterval(interval);
+  }, [isActive,seconds, timelimit]);
+  
+  socket.on("Timer_On",()=>{
+    setIsActive(true);
+  })
+  socket.on("get_current_time",()=>{
+    socket.emit("Receive_current_time",seconds)
+  })
+  return(
+      <div>
+        <div>
+          {timelimit - seconds}s
+        </div>
+      </div>
+    );
+  };
+
+export default Timer;
+
+
+
+/*
+const Timer = ({timelimit,socket,user,drawer}) => {
+  const [seconds, setSeconds] = useState(0);
+  const [isActive, setIsActive] = useState(false);
 
   /*function toggle() {
     setIsActive(!isActive);
-  }*/
+  }
 
   function reset() {
     setSeconds(0);
@@ -28,7 +71,14 @@ const Timer = ({timelimit,socket,user,drawer}) => {
    reset();
  }) 
   
-
+ else if(seconds === timelimit && isActive){
+      if(user.id === drawer.id){
+      socket.emit("time_over",user.room);
+      socket.emit("update_score")}
+      setSeconds(0);
+      setIsActive(false);
+      clearInterval(interval);
+    }
   
 /*  useEffect(() => {    
     let interval = null;
@@ -42,7 +92,7 @@ const Timer = ({timelimit,socket,user,drawer}) => {
       clearInterval(interval);
     }
     return () => clearInterval(interval);
-  }, [isActive, seconds, timelimit]);*/
+  }, [isActive, seconds, timelimit]);
 
   useEffect(() => {    
     let interval = null;
@@ -74,3 +124,5 @@ const Timer = ({timelimit,socket,user,drawer}) => {
   };
 
 export default Timer;
+
+*/
