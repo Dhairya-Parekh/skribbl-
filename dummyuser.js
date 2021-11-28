@@ -48,7 +48,7 @@ function update_score(id,time){
   c_users.find((p_user) => p_user.id === id).score = 250 - 3*time;
   c_users.find((p_user) => p_user.id === id).scores += 250 - 3*time;
   const user = c_users.find((p_user) => p_user.id === id)
-  var new_arr = c_users.filter((p_user) => p_user.room === user.room && !user.is_active );
+  var new_arr = c_users.filter((p_user) => p_user.room === user.room && !p_user.is_active );
   console.log("The full array is", c_users)
   console.log("The New_Arr is",new_arr)
   var is_end = true;

@@ -27,11 +27,11 @@ const Timer = ({timelimit,socket,user,drawer}) => {
   socket.on("Timer_On",()=>{
     setIsActive(true);
   })
-  socket.on("get_current_time",()=>{
-    console.log("Get_current_time event is called")
-    socket.emit("Receive_current_time",seconds)
-    console.log("Sent the following data", seconds)
-  })
+  // socket.on("get_current_time",()=>{
+  //   console.log("Get_current_time event is called")
+  //   socket.emit("Receive_current_time",seconds)
+  //   console.log("Sent the following data", seconds)
+  // })
   return(
       <div>
         <div>

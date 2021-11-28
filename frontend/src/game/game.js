@@ -19,11 +19,13 @@ function Game({user,socket,settings}){
             setcurrent_drawer(data.current_user);
         });
     },[user,socket]);
-    //----------------------------------------------------------//
+
     socket.on("Sub_Round_Khatam",(data)=>{
         console.log("Request to re-render",data);
+        update_curr_word("Kaddu")
         setcurrent_drawer(data.curr_draw);
     })
+    //----------------------------------------------------------//
     console.log("Game_is_rendered with cd:", current_drawer )
     return(  
         <div>
@@ -53,6 +55,7 @@ function Game({user,socket,settings}){
                                     drawer={current_drawer}
                                     socket={socket}
                                     update_curr_word={update_curr_word}
+                                    show_popup={true}
                                 />
                             </div>
                             <div>

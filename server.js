@@ -125,8 +125,8 @@ io.on("connection", (socket) => {
     console.log("Received the time over in room",room)
     update_drawer_score(room);
     const curr_draw = update_active_user(room);
-    io.to(room).emit("Sub_Round_khatam",{curr_draw:curr_draw});
-    console.log("Sub Round Finally khatam ")
+    io.to(room).emit("Sub_Round_Khatam",{curr_draw:curr_draw});
+    console.log("Sub Round Finally khatam emitted new_user",curr_draw);
   })
 
   socket.on("Start_Game_For_All",()=>{
@@ -143,19 +143,31 @@ io.on("connection", (socket) => {
 
   socket.on("Gussed_Correctly",()=>{
     console.log("Guss correct event is catched");
-    socket.emit("get_current_time")
-  })
-
-  socket.on("Receive_current_time",(data)=>{
-    console.log("Yup Here I am with current time:",data)
-    var is_end = update_score(socket.id,data)
+    //socket.emit("get_current_time")
+    console.log("Yup Here I am with current time:",30)
+    var is_end = update_score(socket.id,30)
     console.log("Yup Here I am with current isEnd:",is_end)
     if(is_end){
       const p_user = get_Current_User(socket.id);
-      socket.emit("time_over",p_user.room);
-      console.log("Yes the time is up")
+      console.log("Is_end_ke andar hu",p_user.room)
+      update_drawer_score(p_user.room);
+      const curr_draw = update_active_user(p_user.room);
+      io.to(p_user.room).emit("Sub_Round_Khatam",{curr_draw:curr_draw});
+      console.log("Sub Round khatam emitted new_user",curr_draw);
+      console.log("Yes the time is up from g_c")
     }
   })
+
+  // socket.on("Receive_current_time",(data)=>{
+  //   console.log("Yup Here I am with current time:",data)
+  //   var is_end = update_score(socket.id,data)
+  //   console.log("Yup Here I am with current isEnd:",is_end)
+  //   if(is_end){
+  //     const p_user = get_Current_User(socket.id);
+  //     socket.emit("time_over",p_user.room);
+  //     console.log("Yes the time is up")
+  //   }
+  // })
 
   //------------------------------------------------------//
   socket.on("update_active_user",(room) => {
